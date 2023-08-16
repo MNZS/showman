@@ -98,12 +98,14 @@ function showman_install () {
 		gnupg \
 		lsb-release	
 
-
-	curl -fsSL "https://download.docker.com/linux/$ID/gpg" | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+	sudo install -m 0755 -d /etc/apt/keyrings
+	curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+	sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
 	echo \
-	  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/$ID \
-	  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+	  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+	  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+	  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 	apt-get update
 
