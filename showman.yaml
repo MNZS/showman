@@ -1,20 +1,35 @@
 version: "2.1"
 services:
 
-  jellyfin:
-    image: ghcr.io/linuxserver/jellyfin
-    container_name: jellyfin
+  emby:
+    image: lscr.io/linuxserver/emby:latest
+    container_name: emby
     environment:
       - PUID=SHOWMAN_USER
       - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
     volumes:
-      - /opt/showman/config/jellyfin:/config
-      - /opt/showman/tv:/tv
-      - /opt/showman/movies:/movies
+      - /opt/dms/config/emby:/config
+      - /opt/dms/tv:/tv
+      - /opt/dms/movies:/movies
     ports:
       - 8096:8096
     restart: unless-stopped
+
+##  jellyfin:
+##    image: ghcr.io/linuxserver/jellyfin
+##    container_name: jellyfin
+##    environment:
+##      - PUID=SHOWMAN_USER
+##      - PGID=SHOWMAN_GROUP
+##      - TZ=America/Chicago
+##    volumes:
+##      - /opt/showman/config/jellyfin:/config
+##      - /opt/showman/tv:/tv
+##      - /opt/showman/movies:/movies
+##    ports:
+##      - 8096:8096
+##    restart: unless-stopped
 
   organizr:
     image: organizr/organizr 
