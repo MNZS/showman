@@ -14,6 +14,7 @@ log_date=$(date '+%Y-%m-%d %H:%M')
 ## dc_exec="/usr/local/bin/docker-compose -f $base_dir/compose/showman.yaml"
 dc_exec="/usr/bin/docker compose -f $base_dir/compose/showman.yaml"
 
+
 ###########################################
 
 function log_action () {
@@ -176,7 +177,8 @@ function log_rotate () {
 }
 
 function update_log () {
-	if grep -i 'recreating' $tmp_file; then
+	#if grep -i 'recreating' $tmp_file; then
+	if grep -i 'recreate' $tmp_file; then
 		/usr/bin/docker image prune -f -a
 		
 		echo "$log_date ++++ update has been found" \
@@ -195,7 +197,7 @@ function update_log () {
 			>> $log_file
 	fi
 
-	rm -f $tmp_file
+	#rm -f $tmp_file
 }
 
 function showman_update () {
