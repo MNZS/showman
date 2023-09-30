@@ -178,13 +178,13 @@ function log_rotate () {
 
 function update_log () {
 	#if grep -i 'recreating' $tmp_file; then
-	if grep -i 'recreate' $tmp_file; then
+	if grep -i 'recreat' $tmp_file; then
 		/usr/bin/docker image prune -f -a
 		
 		echo "$log_date ++++ update has been found" \
 			>> $log_file
 
-		for service in $(grep -i 'recreating' $tmp_file | \
+		for service in $(grep -i 'recreat' $tmp_file | \
 			cut -d' ' -f2 | \
 			sort -u); do 
 
@@ -201,8 +201,8 @@ function update_log () {
 }
 
 function showman_update () {
-	compose_pull
-	compose_up > $tmp_file 2>&1
+	compose_pull # >> $tmp_file 2>&1
+	compose_up >> $tmp_file 2>&1
 	log_action "update"
 	update_log
 }
