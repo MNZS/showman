@@ -1,16 +1,16 @@
 <h2>Dockerized Media Server (Showman)</h2>
 
-<h3>Jellyfin, Sabnzbd, Organizr, Sonarr, Radarr, Swag, and Ombi</h3>
+<h3>Emby, Sabnzbd, Organizr, Sonarr, Radarr, Swag, and Ombi</h3>
 
 Showman acts as an abstraction layer for installation and maintenance of docker, 
-docker-compose, and several containers (from LinuxServer.io). Combined they perform as a Media Server
+and several containers (from LinuxServer.io). Combined they perform as a Media Server
 that will allow for download and viewing of TV shows and Movies on an 
 individual's home network as well as remotely (if network configuration allows).
 
 <h3>INSTALLATION:</h3>
 
 Showman is written in bash and configured to run on a Linux distribution based on Debian. 
-Currently tested on Debian and Ubuntu. 
+Currently tested on Debian 12. 
 
 It is recommended, but not required, that the default installation path directory (/opt/showman) 
 is mounted to an external drive and separate from the disk where the OS is installed.
@@ -40,12 +40,12 @@ All activity performed by Showman will be logged to /opt/showman/log/messages.
 
 showman (install | up | down | start | stop | update | destroy)
 
-install - running this option will install docker, docker-compose, and containers from LinuxServer.io for:<br>
+install - running this option will install docker and containers from LinuxServer.io for:<br>
       * Organizr<br>
       * Sonarr<br>
       * Radarr<br>
       * SABNZBd<br>
-      * Jellyfin<br>
+      * Emby<br>
       * Swag (optional)<br>
       * Ombi (optional)<p>
 
