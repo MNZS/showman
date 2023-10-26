@@ -189,94 +189,96 @@ function showman_install () {
 }
 
 function compose_pull () {
-	$dc_exec -f /opt/showman/compose/showman.yaml \
-		pull
+  $dc_exec -f /opt/showman/compose/showman.yaml \
+    pull
 }
 
 function compose_up () {
-	$dc_exec up -d --no-deps
+  $dc_exec up -d --no-deps
 }
 
 function log_rotate () {
-	i='6'
-	[[ -f $log_path/messages.$i ]] \
-		&& rm -f $log_path/messages.$i
-	while [ $i -gt '0' ]; do
-		[[ -f $log_path/messages.$i ]] \
-			&& mv $log_path/messages.$i $log_path/messages.$(($i+1))
-		i=$(($i-1))
-	done
-	mv $log_path/messages $log_path/messages.1
-	log_action "rotate"
-	echo "$log_date ~~~~ rotated showman log files" >> $log_file
+  i='6'
+  [[ -f $log_path/messages.$i ]] \
+    && rm -f $log_path/messages.$i
+
+  while [ $i -gt '0' ]; do
+    [[ -f $log_path/messages.$i ]] \
+      && mv $log_path/messages.$i $log_path/messages.$(($i+1))
+    i=$(($i-1))
+  done
+
+  mv $log_path/messages $log_path/messages.1
+  log_action "rotate"
+  echo "$log_date ~~~~ rotated showman log files" >> $log_file
 	 
 }
 
 function update_log () {
-	if grep -i 'recreat' $tmp_file; then
-		/usr/bin/docker image prune -f -a
+  if grep -i 'recreat' $tmp_file; then
+    /usr/bin/docker image prune -f -a
+
+    echo "$log_date ++++ update has been found" \
+      >> $log_file
+
+    for service in $(grep -i 'recreat' $tmp_file | \
+      cut -d' ' -f3 | \
+        sort -u); do 
+
+      echo "$log_date ++++ $service container updated" \
+        >> $log_file
+    done
 		
-		echo "$log_date ++++ update has been found" \
-			>> $log_file
+  else
+    echo "$log_date ---- no updates found" \
+      >> $log_file
+  fi
 
-		for service in $(grep -i 'recreat' $tmp_file | \
-			cut -d' ' -f3 | \
-			sort -u); do 
-
-			echo "$log_date ++++ $service container updated" \
-				>> $log_file
-		done
-		
-	else
-		echo "$log_date ---- no updates found" \
-			>> $log_file
-	fi
-
-	rm -f $tmp_file
+  rm -f $tmp_file
 }
 
 function showman_update () {
-	compose_pull 
-	compose_up > $tmp_file 2>&1
-	log_action "update"
-	update_log
+  compose_pull 
+  compose_up > $tmp_file 2>&1
+  log_action "update"
+  update_log
 }
 
 if [ "$1" = 'install' ]; then
-	printf "\n\e[32mStarting Showman install...\e[0m\n\n"
-	showman_install
+  printf "\n\e[32mStarting Showman install...\e[0m\n\n"
+  showman_install
 
 elif [ "$1" = 'up' ]; then
-	printf "\n\e[92mBringing up Showman containers...\e[0m\n\n"
-	showman_up
+  printf "\n\e[92mBringing up Showman containers...\e[0m\n\n"
+  showman_up
 
 elif [ "$1" = 'update' ]; then
-	printf "\n\e[92mStarting update of Showman containers...\e[0m\n\n"
-	showman_update
+  printf "\n\e[92mStarting update of Showman containers...\e[0m\n\n"
+  showman_update
 
 elif [ "$1" = 'down' ]; then
-	printf "\n\e[91mShutting down Showman containers...\e[0m\n\n"
-	showman_down
+  printf "\n\e[91mShutting down Showman containers...\e[0m\n\n"
+  showman_down
 
 elif [ "$1" = 'stop' ]; then
-	printf "\n\e[91mStopping Showman containers...\e[0m\n\n"
-	showman_stop
+  printf "\n\e[91mStopping Showman containers...\e[0m\n\n"
+  showman_stop
 
 elif [ "$1" = 'start' ]; then
-	printf "\n\e[92mStarting Showman containers...\e[0m\n\n"
-	showman_start
+  printf "\n\e[92mStarting Showman containers...\e[0m\n\n"
+  showman_start
 
 elif [ "$1" = 'destroy' ]; then
-	printf "\n\e[92mClearing Showman containers...\e[0m\n\n"
-	showman_destroy
+  printf "\n\e[92mClearing Showman containers...\e[0m\n\n"
+  showman_destroy
 
 elif [ "$1" = 'rotate' ]; then
-	printf "\n\e[92mRotating log files...\e[0m\n\n"
-	log_rotate
+  printf "\n\e[92mRotating log files...\e[0m\n\n"
+  log_rotate
 
 else
-	printf "\n\e[34mUsage: showman.sh (install|update|down|stop|start)\e[0m\n\n"
-	exit 1
+  printf "\n\e[34mUsage: showman.sh (install|update|down|stop|start)\e[0m\n\n"
+  exit 1
 fi
 
 exit 0
