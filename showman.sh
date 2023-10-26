@@ -11,18 +11,17 @@ log_path="$base_dir/log"
 log_file="$log_path/messages"
 tmp_file="$log_path/workfile.tmp"
 log_date=$(date '+%Y-%m-%d %H:%M')
-## dc_exec="/usr/local/bin/docker-compose -f $base_dir/compose/showman.yaml"
 dc_exec="/usr/bin/docker compose -f $base_dir/compose/showman.yaml"
 
 
 ###########################################
 
 function log_action () {
-	echo "$log_date ** executed showman $1" >> $log_file
+  echo "$log_date ** executed showman $1" >> $log_file
 }
 
 function make_routine () {
-  if [ $ID== 'arch' ]; then
+  if [ $ID == 'arch' ]; then
     timer='/etc/systemd/system/showman-check.timer'
     service='/etc/systemd/system/showman-check.service'
     ## update showman containers - set timer
@@ -47,12 +46,12 @@ function make_routine () {
     echo "ExecStart=/bin/bash $base_dir/bin/showman.sh update" >> $service
     echo " " >> $service
     echo "[Install]" >> $service
-    echo "WantedBy=multi-user.target" >> $service"
+    echo "WantedBy=multi-user.target" >> $service
     
     /bin/systemctl $timer enable
     /bin/systemctl daemon-reload
 
-  elif [ $ID== 'debian' ]; then
+  elif [ $ID == 'debian' ]; then
     cp "$1" $base_dir/bin/showman.sh
     chmod 700 $base_dir/bin/showman.sh
     (crontab -l 2>/dev/null; echo "0 4 * * * /bin/bash $base_dir/bin/showman.sh update >/dev/null 2>&1") | crontab -
@@ -61,28 +60,28 @@ function make_routine () {
 }
 
 function showman_up () {
-        $dc_exec up -d
-        log_action "up"
+  $dc_exec up -d
+  log_action "up"
 }
 
 function showman_down () {
-        $dc_exec down
-        log_action "down"
+  $dc_exec down
+  log_action "down"
 }
 
 function showman_destroy () {
-        $dc_exec down --rmi all
-        log_action "destroy"
+  $dc_exec down --rmi all
+  log_action "destroy"
 }
 
 function showman_start () {
-        $dc_exec start
-        log_action "start"
+  $dc_exec start
+  log_action "start"
 }
 
 function showman_stop () {
-        $dc_exec stop
-        log_action "stop"
+  $dc_exec stop
+  log_action "stop"
 }
 
 function showman_install () {
@@ -136,8 +135,8 @@ function showman_install () {
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
     echo \
-      "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-      "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+      'deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+      "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable' | \
       sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
     apt-get update
@@ -146,9 +145,8 @@ function showman_install () {
 
   elif [ $ID == 'arch' ]; then
     ## arch stuff
-	### Install docker-compose
-	### curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-	### chmod +x /usr/local/bin/docker-compose
+    echo "arch stuff"
+    exit 1
   fi
 
   ## Install user
