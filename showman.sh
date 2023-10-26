@@ -22,31 +22,32 @@ function log_action () {
 
 function make_routine () {
   if [ $ID == 'arch' ]; then
-    timer='/etc/systemd/system/showman-check.timer'
-    service='/etc/systemd/system/showman-check.service'
+    sys_path='/etc/systemd/system'
+    timer='showman-check.timer'
+    service='showman-check.service'
     ## update showman containers - set timer
-    echo "[Unit]" > $timer
-    echo "Description=Daily check for docker image updates (installed by showman)" >> $timer
-    echo "Requires=showman-check.service" >> $timer 
-    echo " " >> $timer
-    echo "[Timer]" >> $timer
-    echo "Unit=showman-check.service" >> $timer
-    echo "OnCalendar=*-*-* 4:00:00" >> $timer
-    echo " " >> $timer
-    echo "[Install]" >> $timer
-    echo "WantedBy=timers.target" >> $timer
+    echo "[Unit]" > $sys_path/$timer
+    echo "Description=Daily check for docker image updates (installed by showman)" >> $sys_path/$timer
+    echo "Requires=showman-check.service" >> $sys_path/$timer 
+    echo " " >> $sys_path/$timer
+    echo "[Timer]" >> $sys_path/$timer
+    echo "Unit=showman-check.service" >> $sys_path/$timer
+    echo "OnCalendar=*-*-* 4:00:00" >> $sys_path/$timer
+    echo " " >> $sys_path/$timer
+    echo "[Install]" >> $sys_path/$timer
+    echo "WantedBy=timers.target" >> $sys_path/$timer
 
     ## update showman containers - set service
-    echo "[Unit]" > $service
-    echo "Description=Checks for docker image updates (installed by showman)" >> $service
-    echo "Wants=showman-check.timer" >> $service
-    echo " " >> $service
-    echo "[Service]" >> $service
-    echo "Type=oneshot" >> $service
-    echo "ExecStart=/bin/bash $base_dir/bin/showman.sh update" >> $service
-    echo " " >> $service
-    echo "[Install]" >> $service
-    echo "WantedBy=multi-user.target" >> $service
+    echo "[Unit]" > $sys_path/$service
+    echo "Description=Checks for docker image updates (installed by showman)" >> $sys_path/$service
+    echo "Wants=showman-check.timer" >> $sys_path/$service
+    echo " " >> $sys_path/$service
+    echo "[Service]" >> $sys_path/$service
+    echo "Type=oneshot" >> $sys_path/$service
+    echo "ExecStart=/bin/bash $base_dir/bin/showman.sh update" >> $sys_path/$service
+    echo " " >> $sys_path/$service
+    echo "[Install]" >> $sys_path/$service
+    echo "WantedBy=multi-user.target" >> $sys_path/$service
     
     /bin/systemctl $timer enable
     /bin/systemctl daemon-reload
@@ -144,9 +145,12 @@ function showman_install () {
     apt-get -y install docker-ce docker-ce-cli containerd.io
 
   elif [ $ID == 'arch' ]; then
-    ## arch stuff
-    echo "arch stuff"
-    exit 1
+    ## https://wiki.archlinux.org/title/docker
+    pacman -Sy
+    pacman -S --noconfirm docker
+    systemctl enable docker.service
+    systemctl start docker.service
+    
   fi
 
   ## Install user
