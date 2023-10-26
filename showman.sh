@@ -147,7 +147,7 @@ function showman_install () {
   elif [ $ID == 'arch' ]; then
     ## https://wiki.archlinux.org/title/docker
     pacman -Sy
-    pacman -S --noconfirm docker
+    pacman -S --noconfirm docker docker-compose
     systemctl enable docker.service
     systemctl start docker.service
     
