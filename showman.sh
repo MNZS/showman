@@ -21,11 +21,43 @@ function log_action () {
 	echo "$log_date ** executed showman $1" >> $log_file
 }
 
-function make_cron () {
-	cp "$1" $base_dir/bin/showman.sh
-	chmod 700 $base_dir/bin/showman.sh
-	(crontab -l 2>/dev/null; echo "0 4 * * * /bin/bash $base_dir/bin/showman.sh update >/dev/null 2>&1") | crontab -
-	(crontab -l 2>/dev/null; echo "0 0 1 * * /bin/bash $base_dir/bin/showman.sh rotate >/dev/null 2>&1") | crontab -
+function make_routine () {
+  if [ $ID== 'arch' ]; then
+    timer='/etc/systemd/system/showman-check.timer'
+    service='/etc/systemd/system/showman-check.service'
+    ## update showman containers - set timer
+    echo "[Unit]" > $timer
+    echo "Description=Daily check for docker image updates (installed by showman)" >> $timer
+    echo "Requires=showman-check.service" >> $timer 
+    echo " " >> $timer
+    echo "[Timer]" >> $timer
+    echo "Unit=showman-check.service" >> $timer
+    echo "OnCalendar=*-*-* 4:00:00" >> $timer
+    echo " " >> $timer
+    echo "[Install]" >> $timer
+    echo "WantedBy=timers.target" >> $timer
+
+    ## update showman containers - set service
+    echo "[Unit]" > $service
+    echo "Description=Checks for docker image updates (installed by showman)" >> $service
+    echo "Wants=showman-check.timer" >> $service
+    echo " " >> $service
+    echo "[Service]" >> $service
+    echo "Type=oneshot" >> $service
+    echo "ExecStart=/bin/bash $base_dir/bin/showman.sh update" >> $service
+    echo " " >> $service
+    echo "[Install]" >> $service
+    echo "WantedBy=multi-user.target" >> $service"
+    
+    /bin/systemctl $timer enable
+    /bin/systemctl daemon-reload
+
+  elif [ $ID== 'debian' ]; then
+    cp "$1" $base_dir/bin/showman.sh
+    chmod 700 $base_dir/bin/showman.sh
+    (crontab -l 2>/dev/null; echo "0 4 * * * /bin/bash $base_dir/bin/showman.sh update >/dev/null 2>&1") | crontab -
+    (crontab -l 2>/dev/null; echo "0 0 1 * * /bin/bash $base_dir/bin/showman.sh rotate >/dev/null 2>&1") | crontab -
+  fi
 }
 
 function showman_up () {
@@ -54,101 +86,103 @@ function showman_stop () {
 }
 
 function showman_install () {
+  ## figure out which based distro we're running
+  ## sets the value for $ID variable
+  . /etc/os-release
 
-        printf "\n\tDo you intend to access media from outside of the\n"
-        printf "\tnetwork where the media server will reside? (y/N)\n\n"
+  printf "\n\tDo you intend to access media from outside of the\n"
+  printf "\tnetwork where the media server will reside? (y/N)\n\n"
 
-        read user_choice
+  read user_choice
 
-        user_choice=${user_choice::1}
-        user_choice=`echo $user_choice | tr '[:upper:]' '[:lower:]'`
+  user_choice=${user_choice::1}
+  user_choice=`echo $user_choice | tr '[:upper:]' '[:lower:]'`
 
-	if [ $user_choice = 'y' ]; then
-		printf "\n\tshowman will be installed with options for public access\n\n"
-	elif [ $user_choice = 'n' ]; then
-		printf "\n\tshowman will be installed for use on local network only\n\n"
-	else
-		printf "\n\tAnswer must be Y or N\n"	
-		printf "\n\tPlease re-run script and try again\n\n"
-		exit 1
-	fi
+  if [ $user_choice = 'y' ]; then
+    printf "\n\tshowman will be installed with options for public access\n\n"
+  elif [ $user_choice = 'n' ]; then
+    printf "\n\tshowman will be installed for use on local network only\n\n"
+  else
+    printf "\n\tAnswer must be Y or N\n"	
+    printf "\n\tPlease re-run script and try again\n\n"
+    exit 1
+  fi
 
-	printf "\tIf this isn't what you wanted, hit ctrl-c now to cancel install\n\n"
-	sleep 7
+  printf "\tIf this isn\'t what you wanted, hit ctrl-c now to cancel install\n\n"
+  sleep 7
 
-	printf "\n\tStarting Showman install...\n\n"
+  printf "\n\tStarting Showman install...\n\n"
 
-	## function variables
-	user='showman'
-	group='showman'
+  ## function variables
+  user='showman'
+  group='showman'
 
-	all_directories=('bin' 'config' 'downloads' 'incomplete-downloads' 'tv' 'movies' 'compose' 'log')
+  all_directories=('bin' 'config' 'downloads' 'incomplete-downloads' 'tv' 'movies' 'compose' 'log')
 
-	mkdir $base_dir
+  mkdir $base_dir
 
-	## figure out which .deb based distro we're running
-	. /etc/os-release
+  if [ $ID == 'debian' ]; then
+    apt-get update
+    apt-get -y upgrade
+    apt-get -y install \
+      apt-transport-https \
+      ca-certificates \
+      curl \
+      gnupg \
+      lsb-release	
 
-	apt-get update
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
-	apt-get -y upgrade
+    echo \
+      "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+      "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-	apt-get -y install \
-		apt-transport-https \
-		ca-certificates \
-		curl \
-		gnupg \
-		lsb-release	
+    apt-get update
 
-	sudo install -m 0755 -d /etc/apt/keyrings
-	curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-	sudo chmod a+r /etc/apt/keyrings/docker.gpg
+    apt-get -y install docker-ce docker-ce-cli containerd.io
 
-	echo \
-	  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-	  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-	  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-	apt-get update
-
-	apt-get -y install docker-ce docker-ce-cli containerd.io
-
+  elif [ $ID == 'arch' ]; then
+    ## arch stuff
 	### Install docker-compose
 	### curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 	### chmod +x /usr/local/bin/docker-compose
+  fi
 
-	### Install user
-	useradd \
-       		-c 'Showman Role Account' \
-	        $user
+  ## Install user
+  useradd \
+    -c 'Showman Role Account' \
+    $user
 
-	for directory in "${all_directories[@]}"; do
-		if [ ! -d "$base_dir/$directory" ]; then
-			mkdir "$base_dir/$directory"
-			chown -R $user:$group "$base_dir/$directory"
-		fi	
-	done
+  for directory in "${all_directories[@]}"; do
+    if [ ! -d "$base_dir/$directory" ]; then
+      mkdir "$base_dir/$directory"
+      chown -R $user:$group "$base_dir/$directory"
+    fi	
+  done
 
-	user_id=$(id -u $user)
-	group_id=$(id -g $user)
+  user_id=$(id -u $user)
+  group_id=$(id -g $user)
 
-	sed -i "s/SHOWMAN_USER/$user_id/g" ./showman.yaml
-	sed -i "s/SHOWMAN_GROUP/$group_id/g" ./showman.yaml
-	sed -i "s/SHOWMAN_URL/$tls_url/g" ./showman.yaml
+  sed -i "s/SHOWMAN_USER/$user_id/g" ./showman.yaml
+  sed -i "s/SHOWMAN_GROUP/$group_id/g" ./showman.yaml
+  sed -i "s/SHOWMAN_URL/$tls_url/g" ./showman.yaml
 
-	if [ $user_choice = 'y' ]; then
-		sed -i "s/##//g" ./showman.yaml
-		sed -i "s/ORG_PORT/8010/" ./showman.yaml
-	else 
-		sed -i "s/ORG_PORT/80/" ./showman.yaml
-	fi
+  if [ $user_choice = 'y' ]; then
+    sed -i "s/##//g" ./showman.yaml
+    sed -i "s/ORG_PORT/8010/" ./showman.yaml
+  else 
+    sed -i "s/ORG_PORT/80/" ./showman.yaml
+  fi
 
-	cp ./showman.yaml $base_dir/compose/
+  cp ./showman.yaml $base_dir/compose/
 
-	make_cron "$0"
+  make_routine "$0"
 
-	log_action "install"	
-	showman_up
+  log_action "install"	
+  showman_up
 
 }
 
