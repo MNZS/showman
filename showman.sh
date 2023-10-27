@@ -49,7 +49,7 @@ function make_routine () {
     echo "[Install]" >> $sys_path/$service
     echo "WantedBy=multi-user.target" >> $sys_path/$service
     
-    /bin/systemctl $timer enable
+    /bin/systemctl enable $timer
     /bin/systemctl daemon-reload
 
   elif [ $ID == 'debian' ]; then
@@ -72,7 +72,7 @@ function showman_down () {
 }
 
 function showman_destroy () {
-  $dc_exec down --rmi all
+  $dc_exec --rmi all down
   log_action "destroy"
 }
 
@@ -190,12 +190,12 @@ function showman_install () {
 }
 
 function compose_pull () {
-  $dc_exec -f /opt/showman/compose/showman.yaml \
-    pull
+  $dc_exec pull
 }
 
 function compose_up () {
-  $dc_exec up -d --no-deps
+  #$dc_exec up -d --no-deps
+  $dc_exec up 
 }
 
 function log_rotate () {
