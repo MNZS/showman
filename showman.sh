@@ -195,7 +195,7 @@ function compose_pull () {
 
 function compose_up () {
   #$dc_exec up -d --no-deps
-  $dc_exec up 
+  $dc_exec up -d 
 }
 
 function log_rotate () {
