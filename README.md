@@ -26,7 +26,7 @@ During installation, Showman will install a crontab (debian) or systemd.timers (
 
 <h3>USAGE:</h3>
 
-showman (install | up | down | start | stop | update)
+showman (install | update | start | stop )
 
 install - running this option will install docker and containers from LinuxServer.io for:<br>
       * Organizr<br>
@@ -38,10 +38,6 @@ install - running this option will install docker and containers from LinuxServe
       * Ombi (optional)<p>
 
 update - running this option will update all containers to the latest stable release available and relaunch containers
-
-up - running this option will download and start images for containers listed within the yaml configuration file
-
-down - running this option will stop and remove containers listed within the yaml configuration file
 
 start - running this option will start all containers
 
