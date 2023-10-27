@@ -49,9 +49,9 @@ function make_routine () {
     echo "[Install]" >> $sys_path/$service
     echo "WantedBy=multi-user.target" >> $sys_path/$service
     
-    /bin/systemctl enable $timer
-    /bin/systemctl enable $service
     /bin/systemctl daemon-reload
+    /bin/systemctl start $timer
+    /bin/systemctl enable $timer
 
   elif [ $ID == 'debian' ]; then
     (crontab -l 2>/dev/null; echo "0 4 * * * /bin/bash $base_dir/bin/showman.sh update >/dev/null 2>&1") | crontab -
