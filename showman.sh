@@ -53,11 +53,12 @@ function make_routine () {
     /bin/systemctl daemon-reload
 
   elif [ $ID == 'debian' ]; then
-    cp "$1" $base_dir/bin/showman.sh
-    chmod 700 $base_dir/bin/showman.sh
     (crontab -l 2>/dev/null; echo "0 4 * * * /bin/bash $base_dir/bin/showman.sh update >/dev/null 2>&1") | crontab -
     (crontab -l 2>/dev/null; echo "0 0 1 * * /bin/bash $base_dir/bin/showman.sh rotate >/dev/null 2>&1") | crontab -
   fi
+
+  cp "$1" $base_dir/bin/showman.sh
+  chmod 700 $base_dir/bin/showman.sh
 }
 
 function showman_up () {
