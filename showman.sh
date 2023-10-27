@@ -98,6 +98,10 @@ function showman_install () {
 
   read user_choice
 
+  if [ -z $user_choice ]; then
+    user_choice='n'
+  fi
+
   user_choice=${user_choice::1}
   user_choice=`echo $user_choice | tr '[:upper:]' '[:lower:]'`
 
