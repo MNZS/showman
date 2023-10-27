@@ -50,6 +50,7 @@ function make_routine () {
     echo "WantedBy=multi-user.target" >> $sys_path/$service
     
     /bin/systemctl enable $timer
+    /bin/systemctl enable $service
     /bin/systemctl daemon-reload
 
   elif [ $ID == 'debian' ]; then
