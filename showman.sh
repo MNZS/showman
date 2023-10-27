@@ -284,7 +284,7 @@ elif [ "$1" = 'rotate' ]; then
   log_rotate
 
 else
-  printf "\n\e[34mUsage: showman.sh (install|update|down|stop|start)\e[0m\n\n"
+  printf "\n\e[34mUsage: showman.sh (install|update|stop|start)\e[0m\n\n"
   exit 1
 fi
 
