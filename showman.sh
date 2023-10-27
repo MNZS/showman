@@ -57,7 +57,8 @@ function make_routine () {
     (crontab -l 2>/dev/null; echo "0 0 1 * * /bin/bash $base_dir/bin/showman.sh rotate >/dev/null 2>&1") | crontab -
   fi
 
-  cp "$1" $base_dir/bin/showman.sh
+  working_dir=`dirname $0`
+  cp -a $working_dir $base_dir/bin/
   chmod 700 $base_dir/bin/showman.sh
 }
 
