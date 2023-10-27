@@ -9,9 +9,9 @@ services:
       - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
     volumes:
-      - /opt/dms/config/emby:/config
-      - /opt/dms/tv:/tv
-      - /opt/dms/movies:/movies
+      - /opt/showman/config/emby:/config
+      - /opt/showman/tv:/tv
+      - /opt/showman/movies:/movies
     ports:
       - 8096:8096
     restart: unless-stopped
