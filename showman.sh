@@ -129,27 +129,22 @@ function showman_install () {
   mkdir $base_dir
 
   if [ $ID == 'debian' ]; then
+    # Add Docker's official GPG key:
     apt-get update
-    apt-get -y upgrade
-    apt-get -y install \
-      apt-transport-https \
-      ca-certificates \
-      curl \
-      gnupg \
-      lsb-release	
+    apt-get install ca-certificates curl
+    install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+    chmod a+r /etc/apt/keyrings/docker.asc
 
-    sudo install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    sudo chmod a+r /etc/apt/keyrings/docker.gpg
-
+    # Add the repository to Apt sources:
     echo \
-      'deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-      "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable' | \
-      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
     apt-get update
 
-    apt-get -y install docker-ce docker-ce-cli containerd.io
+    apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
   elif [ $ID == 'arch' ]; then
     ## https://wiki.archlinux.org/title/docker
