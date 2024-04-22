@@ -240,6 +240,10 @@ function update_log () {
 }
 
 function showman_update () {
+  if [ -f /tmp/stopfile ]; then
+    log_action "skip"
+    exit 1
+  fi
   compose_pull 
   compose_up > $tmp_file 2>&1
   log_action "update"
