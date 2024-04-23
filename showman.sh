@@ -155,8 +155,11 @@ function showman_install () {
     
   fi
 
-  ## Install user
+  ## create user
+  NOLOGIN=`which nologin`
   useradd \
+    -s $NOLOGIN \
+    -d /dev/null -M \
     -c 'Showman Role Account' \
     $user
 
