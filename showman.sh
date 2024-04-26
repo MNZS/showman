@@ -127,6 +127,9 @@ function showman_install () {
   all_directories=('bin' 'config' 'downloads' 'incomplete-downloads' 'tv' 'movies' 'compose' 'log')
 
   mkdir $base_dir
+  working_dir=`dirname $0`
+  cp -a $working_dir $base_dir/bin/
+  chmod 700 $base_dir/bin/showman.sh
 
   if [ $ID == 'debian' ]; then
     # Add Docker's official GPG key:
