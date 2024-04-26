@@ -4,8 +4,8 @@ services:
     image: lscr.io/linuxserver/emby:latest
     container_name: emby
     environment:
-      - PUID=1001
-      - PGID=1001
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/emby:/config
@@ -19,8 +19,8 @@ services:
     image: organizr/organizr 
     container_name: organizr
     environment:
-      - PUID=1001
-      - PGID=1001
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/organizr:/config
@@ -32,8 +32,8 @@ services:
     image: ghcr.io/linuxserver/radarr
     container_name: radarr
     environment:
-      - PUID=1001
-      - PGID=1001
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/radarr:/config
@@ -49,8 +49,8 @@ services:
     image: ghcr.io/linuxserver/sabnzbd
     container_name: sabnzbd
     environment:
-      - PUID=1001
-      - PGID=1001
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/sabnzbd:/config
@@ -65,8 +65,8 @@ services:
     image: ghcr.io/linuxserver/sonarr
     container_name: sonarr
     environment:
-      - PUID=1001
-      - PGID=1001
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/sonarr:/config
@@ -78,34 +78,34 @@ services:
       - 9898:9898
     restart: unless-stopped
 
-  swag:
-    image: ghcr.io/linuxserver/swag
-    container_name: swag
-    cap_add:
-      - NET_ADMIN
-    environment:
-      - PUID=1001
-      - PGID=1001
-      - TZ=America/Chicago
-      - URL=
-      - SUBDOMAINS=www,ombi,jellyfin
-      - VALIDATION=http
-    volumes:
-      - /opt/showman/config/swag:/config
-    ports:
-      - 443:443
-      - 80:80
-    restart: unless-stopped
+##  swag:
+##    image: ghcr.io/linuxserver/swag
+##    container_name: swag
+##    cap_add:
+##      - NET_ADMIN
+##    environment:
+##      - PUID=SHOWMAN_USER
+##      - PGID=SHOWMAN_GROUP
+##      - TZ=America/Chicago
+##      - URL=SHOWMAN_URL
+##      - SUBDOMAINS=www,ombi,jellyfin
+##      - VALIDATION=http
+##    volumes:
+##      - /opt/showman/config/swag:/config
+##    ports:
+##      - 443:443
+##      - 80:80
+##    restart: unless-stopped
   
-  ombi:
-    image: ghcr.io/linuxserver/ombi
-    container_name: ombi
-    environment:
-      - PUID=1001
-      - PGID=1001
-      - TZ=America/Chicago
-    volumes:
-      - /opt/showman/config/ombi:/config
-    ports:
-      - 3579:3579
-    restart: unless-stopped
+##  ombi:
+##    image: ghcr.io/linuxserver/ombi
+##    container_name: ombi
+##    environment:
+##      - PUID=SHOWMAN_USER
+##      - PGID=SHOWMAN_GROUP
+##      - TZ=America/Chicago
+##    volumes:
+##      - /opt/showman/config/ombi:/config
+##    ports:
+##      - 3579:3579
+##    restart: unless-stopped
