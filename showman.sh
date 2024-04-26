@@ -58,9 +58,6 @@ function make_routine () {
     (crontab -l 2>/dev/null; echo "0 0 1 * * /bin/bash $base_dir/bin/showman.sh rotate >/dev/null 2>&1") | crontab -
   fi
 
-  working_dir=`dirname $0`
-  cp -a $working_dir $base_dir/bin/
-  chmod 700 $base_dir/bin/showman.sh
 }
 
 function showman_up () {
@@ -176,18 +173,16 @@ function showman_install () {
   user_id=$(id -u $user)
   group_id=$(id -g $user)
 
-  sed -i "s/SHOWMAN_USER/$user_id/g" ./showman.yaml
-  sed -i "s/SHOWMAN_GROUP/$group_id/g" ./showman.yaml
-  sed -i "s/SHOWMAN_URL/$tls_url/g" ./showman.yaml
+  sed -i "s/SHOWMAN_USER/$user_id/g" $base_dir/compose/showman.yaml
+  sed -i "s/SHOWMAN_GROUP/$group_id/g" $base_dir/compose/showman.yaml
+  sed -i "s/SHOWMAN_URL/$tls_url/g" $base_dir/compose/showman.yaml
 
   if [ $user_choice = 'y' ]; then
-    sed -i "s/##//g" ./showman.yaml
-    sed -i "s/ORG_PORT/8010/" ./showman.yaml
+    sed -i "s/##//g" $base_dir/compose/showman.yaml
+    sed -i "s/ORG_PORT/8010/" $base_dir/compose/showman.yaml
   else 
-    sed -i "s/ORG_PORT/80/" ./showman.yaml
+    sed -i "s/ORG_PORT/80/" $base_dir/compose/showman.yaml
   fi
-
-  cp ./showman.yaml $base_dir/compose/
 
   make_routine "$0"
 
