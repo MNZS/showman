@@ -169,6 +169,7 @@ function showman_install () {
       chown -R $user:$group "$base_dir/$directory"
     fi	
   done
+  cp ./showman.yaml $base_dir/compose/showman.yaml
 
   user_id=$(id -u $user)
   group_id=$(id -g $user)
