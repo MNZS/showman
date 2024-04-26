@@ -4,8 +4,8 @@ services:
     image: lscr.io/linuxserver/emby:latest
     container_name: emby
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/emby:/config
@@ -19,21 +19,21 @@ services:
     image: organizr/organizr 
     container_name: organizr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/organizr:/config
     ports:
-      - 8010:80
+      - ORG_PORT:80
     restart: unless-stopped
 
   radarr:
     image: ghcr.io/linuxserver/radarr
     container_name: radarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/radarr:/config
@@ -49,8 +49,8 @@ services:
     image: ghcr.io/linuxserver/sabnzbd
     container_name: sabnzbd
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/sabnzbd:/config
@@ -65,8 +65,8 @@ services:
     image: ghcr.io/linuxserver/sonarr
     container_name: sonarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/sonarr:/config
@@ -84,10 +84,10 @@ services:
 ##    cap_add:
 ##      - NET_ADMIN
 ##    environment:
-##      - PUID=1000
-##      - PGID=1000
+##      - PUID=SHOWMAN_USER
+##      - PGID=SHOWMAN_GROUP
 ##      - TZ=America/Chicago
-##      - URL=
+##      - URL=SHOWMAN_URL
 ##      - SUBDOMAINS=www,ombi,jellyfin
 ##      - VALIDATION=http
 ##    volumes:
@@ -101,8 +101,8 @@ services:
 ##    image: ghcr.io/linuxserver/ombi
 ##    container_name: ombi
 ##    environment:
-##      - PUID=1000
-##      - PGID=1000
+##      - PUID=SHOWMAN_USER
+##      - PGID=SHOWMAN_GROUP
 ##      - TZ=America/Chicago
 ##    volumes:
 ##      - /opt/showman/config/ombi:/config
