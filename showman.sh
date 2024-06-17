@@ -222,7 +222,7 @@ function update_log () {
   if grep -i 'recreat' $tmp_file; then
     /usr/bin/docker image prune -f -a
 
-    echo "$log_date ++++ update has been found" \
+    echo "$log_date ++ update has been found" \
       >> $log_file
 
     for service in $(grep -i 'recreat' $tmp_file | \
