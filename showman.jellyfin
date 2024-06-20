@@ -1,0 +1,111 @@
+services:
+
+  jellyfin:
+    image: ghcr.io/linuxserver/jellyfin
+    container_name: jellyfin
+    environment:
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
+      - TZ=America/Chicago
+    volumes:
+      - /opt/showman/config/jellyfin:/config
+      - /opt/showman/tv:/tv
+      - /opt/showman/movies:/movies
+    ports:
+      - 8096:8096
+    restart: unless-stopped
+
+  organizr:
+    image: organizr/organizr 
+    container_name: organizr
+    environment:
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
+      - TZ=America/Chicago
+    volumes:
+      - /opt/showman/config/organizr:/config
+    ports:
+      - ORG_PORT:80
+    restart: unless-stopped
+
+  radarr:
+    image: ghcr.io/linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
+      - TZ=America/Chicago
+    volumes:
+      - /opt/showman/config/radarr:/config
+      - /opt/showman/movies:/movies
+      - /opt/showman/downloads:/downloads
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - 7878:7878
+      - 8787:8787
+    restart: unless-stopped
+
+  sabnzbd:
+    image: ghcr.io/linuxserver/sabnzbd
+    container_name: sabnzbd
+    environment:
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
+      - TZ=America/Chicago
+    volumes:
+      - /opt/showman/config/sabnzbd:/config
+      - /opt/showman/downloads:/downloads
+      - /opt/showman/incomplete-downloads:/incomplete-downloads 
+    ports:
+      - 8080:8080
+      - 9090:9090
+    restart: unless-stopped
+
+  sonarr:
+    image: ghcr.io/linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
+      - TZ=America/Chicago
+    volumes:
+      - /opt/showman/config/sonarr:/config
+      - /opt/showman/tv:/tv
+      - /opt/showman/downloads:/downloads
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - 8989:8989
+      - 9898:9898
+    restart: unless-stopped
+
+##  swag:
+##    image: ghcr.io/linuxserver/swag
+##    container_name: swag
+##    cap_add:
+##      - NET_ADMIN
+##    environment:
+##      - PUID=SHOWMAN_USER
+##      - PGID=SHOWMAN_GROUP
+##      - TZ=America/Chicago
+##      - URL=SHOWMAN_URL
+##      - SUBDOMAINS=www,ombi,jellyfin
+##      - VALIDATION=http
+##    volumes:
+##      - /opt/showman/config/swag:/config
+##    ports:
+##      - 443:443
+##      - 80:80
+##    restart: unless-stopped
+##  
+##  ombi:
+##    image: ghcr.io/linuxserver/ombi
+##    container_name: ombi
+##    environment:
+##      - PUID=SHOWMAN_USER
+##      - PGID=SHOWMAN_GROUP
+##      - TZ=America/Chicago
+##    volumes:
+##      - /opt/showman/config/ombi:/config
+##    ports:
+##      - 3579:3579
+##    restart: unless-stopped
