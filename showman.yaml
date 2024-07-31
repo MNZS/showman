@@ -1,19 +1,34 @@
 services:
 
-  emby:
-    image: lscr.io/linuxserver/emby:latest
-    container_name: emby
-    environment:
-      - PUID=SHOWMAN_USER
-      - PGID=SHOWMAN_GROUP
-      - TZ=America/Chicago
-    volumes:
-      - /opt/showman/config/emby:/config
-      - /opt/showman/tv:/tv
-      - /opt/showman/movies:/movies
-    ports:
-      - 8096:8096
-    restart: unless-stopped
+JF  jellyfin:
+JF    image: ghcr.io/linuxserver/jellyfin
+JF    container_name: jellyfin
+JF    environment:
+JF      - PUID=SHOWMAN_USER
+JF      - PGID=SHOWMAN_GROUP
+JF      - TZ=America/Chicago
+JF    volumes:
+JF      - /opt/showman/config/jellyfin:/config
+JF      - /opt/showman/tv:/tv
+JF      - /opt/showman/movies:/movies
+JF    ports:
+JF      - 8096:8096
+JF    restart: unless-stopped
+
+MB  emby:
+MB    image: lscr.io/linuxserver/emby:latest
+MB   container_name: emby
+MB    environment:
+MB      - PUID=SHOWMAN_USER
+MB      - PGID=SHOWMAN_GROUP
+MB      - TZ=America/Chicago
+MB    volumes:
+MB      - /opt/showman/config/emby:/config
+MB      - /opt/showman/tv:/tv
+MB      - /opt/showman/movies:/movies
+MB    ports:
+MB      - 8096:8096
+MB    restart: unless-stopped
 
   organizr:
     image: organizr/organizr 
@@ -26,6 +41,22 @@ services:
       - /opt/showman/config/organizr:/config
     ports:
       - ORG_PORT:80
+    restart: unless-stopped
+
+  sabnzbd:
+    image: ghcr.io/linuxserver/sabnzbd
+    container_name: sabnzbd
+    environment:
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
+      - TZ=America/Chicago
+    volumes:
+      - /opt/showman/config/sabnzbd:/config
+      - /opt/showman/downloads:/downloads
+      - /opt/showman/incomplete-downloads:/incomplete-downloads 
+    ports:
+      - 8080:8080
+      - 9090:9090
     restart: unless-stopped
 
   radarr:
@@ -45,22 +76,6 @@ services:
       - 8787:8787
     restart: unless-stopped
 
-  sabnzbd:
-    image: ghcr.io/linuxserver/sabnzbd
-    container_name: sabnzbd
-    environment:
-      - PUID=SHOWMAN_USER
-      - PGID=SHOWMAN_GROUP
-      - TZ=America/Chicago
-    volumes:
-      - /opt/showman/config/sabnzbd:/config
-      - /opt/showman/downloads:/downloads
-      - /opt/showman/incomplete-downloads:/incomplete-downloads 
-    ports:
-      - 8080:8080
-      - 9090:9090
-    restart: unless-stopped
-
   sonarr:
     image: ghcr.io/linuxserver/sonarr
     container_name: sonarr
@@ -76,6 +91,19 @@ services:
     ports:
       - 8989:8989
       - 9898:9898
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
+      - TZ=America/Chicago
+    volumes:
+      - /opt/showman/config/prowlarr:/config
+    ports:
+      - 9696:9696
     restart: unless-stopped
 
 ##  swag:
