@@ -113,6 +113,30 @@ function showman_install () {
   fi
 
   printf "\tIf this isn\'t what you wanted, hit ctrl-c now to cancel install\n\n"
+
+  printf "\n\tDo you prefer to use Jellyfin(j) or Emby(e) for watching content?\n\n"
+
+  read user_viewer
+
+  if [ -z $user_viewer ]; then
+    user_viewer='j'
+  fi
+
+  user_viewer=${user_viewer::1}
+  user_viewer=`echo $user_viewer \| tr '[:upper:]' '[:lower:]'`
+
+  if [ $user_viewer = 'j' ]; then
+    printf "\n\tjellyfin will be installed as the content viewer\n\n"
+  elif [ $user_viewer = 'e' ]; then
+    printf "\n\temby will be install as the content viewer\n\n"
+  else
+    printf "\n\tAnswer must be J or E\n"
+    printf "\n\tPlease re-run script and try again\n\n"
+    exit1
+  fi
+
+  printf "\tIf this isn\'t what you wanted, hit ctrl-c now to cancel install\n\n"
+
   sleep 7
 
   printf "\n\tStarting Showman install...\n\n"
@@ -183,6 +207,14 @@ function showman_install () {
     sed -i "s/ORG_PORT/8010/" $base_dir/compose/showman.yaml
   else 
     sed -i "s/ORG_PORT/80/" $base_dir/compose/showman.yaml
+  fi
+
+  if [ $user_viewer = 'j' ]; then
+    sed -i "s/JF//g" $base_dir/compose/showman.yaml
+    sed -i "s/MB/##/g" $base_dir/compose/showman.yaml
+  elif [ $user_viewer = 'e' ]; then
+    sed -i "s/JF/##/g" $base_dir/compose/showman.yaml
+    sec -i "s/MB//g" $base_dir/compose/showman.yaml
   fi
 
   make_routine "$0"
