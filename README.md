@@ -31,10 +31,11 @@ showman (install | update | start | stop )
 
 install - running this option will install docker and containers from LinuxServer.io for:<br>
       * Organizr<br>
+      * Prowlarr<br>
       * Sonarr<br>
       * Radarr<br>
       * SABNZBd<br>
-      * Emby<br>
+      * Emby -or Jellyfin<br>
       * Swag (optional)<br>
       * Ombi (optional)<p>
 
