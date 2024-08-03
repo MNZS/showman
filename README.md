@@ -13,7 +13,6 @@ It is recommended, but not required, that the default installation path director
 
 Two global variables may be edited prior to the first run of the script. These variables are used to identify the installation path (default is /opt/showman) and the domain name that may be used for instances where the media server will be made available to remote networks using the SWAG reverse proxy. (If you will not be using the reverse proxy, this variable may remain empty)
 
-If you prefer to use Jellyfin over Emby, replace the showman.yaml file with the jellyfin.yaml file prior to running install.
 
 As root or with root privileges, run 
 
