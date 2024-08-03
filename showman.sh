@@ -123,7 +123,7 @@ function showman_install () {
   fi
 
   user_viewer=${user_viewer::1}
-  user_viewer=`echo $user_viewer \| tr '[:upper:]' '[:lower:]'`
+  user_viewer=`echo $user_viewer | tr '[:upper:]' '[:lower:]'`
 
   if [ $user_viewer = 'j' ]; then
     printf "\n\tjellyfin will be installed as the content viewer\n\n"
