@@ -132,7 +132,7 @@ function showman_install () {
   else
     printf "\n\tAnswer must be J or E\n"
     printf "\n\tPlease re-run script and try again\n\n"
-    exit1
+    exit 1
   fi
 
   printf "\tIf this isn\'t what you wanted, hit ctrl-c now to cancel install\n\n"
@@ -214,7 +214,7 @@ function showman_install () {
     sed -i "s/MB/##/g" $base_dir/compose/showman.yaml
   elif [ $user_viewer = 'e' ]; then
     sed -i "s/JF/##/g" $base_dir/compose/showman.yaml
-    sec -i "s/MB//g" $base_dir/compose/showman.yaml
+    sed -i "s/MB//g" $base_dir/compose/showman.yaml
   fi
 
   make_routine "$0"

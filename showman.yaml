@@ -16,19 +16,19 @@ JF      - 8096:8096
 JF    restart: unless-stopped
 
 MB  emby:
-MB    image: lscr.io/linuxserver/emby:latest
+MB   image: lscr.io/linuxserver/emby:latest
 MB   container_name: emby
-MB    environment:
+MB   environment:
 MB      - PUID=SHOWMAN_USER
 MB      - PGID=SHOWMAN_GROUP
 MB      - TZ=America/Chicago
-MB    volumes:
+MB   volumes:
 MB      - /opt/showman/config/emby:/config
 MB      - /opt/showman/tv:/tv
 MB      - /opt/showman/movies:/movies
-MB    ports:
+MB   ports:
 MB      - 8096:8096
-MB    restart: unless-stopped
+MB   restart: unless-stopped
 
   organizr:
     image: organizr/organizr 
