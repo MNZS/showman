@@ -1,6 +1,7 @@
 <h2>Dockerized Media Server (Showman)</h2>
 
-<h3>Emby, Sabnzbd, Organizr, Sonarr, Radarr, Swag, and Ombi</h3>
+<h3>Prowlarr, Sabnzbd, Organizr, Sonarr, Radarr, Swag, and Ombi</h3><br>
+<h3>option for either Jellyfin or Emby as media viewer<h3><p>
 
 Showman acts as an abstraction layer for installation and maintenance several docker containers (from LinuxServer.io) running as a group of "microservices". Combined they perform as a Media Server that will allow for download and viewing of TV shows and Movies on an individual's home network as well as remotely (if network configuration allows).
 
