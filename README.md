@@ -7,7 +7,7 @@ Showman acts as an abstraction layer for installation and maintenance several do
 
 <h3>INSTALLATION:</h3>
 
-Showman is written in bash and configured to run on either Debian or Arch Linux distributions.
+Showman is written in bash and configured to run on either Debian or Arch Linux. 
 
 It is recommended, but not required, that the default installation path directory (/opt/showman) is mounted to an external drive and separate from the disk where the OS is installed.
 
