@@ -7,7 +7,7 @@ Showman acts as an abstraction layer for installation and maintenance several do
 
 <h3>INSTALLATION:</h3>
 
-Showman is written in bash and configured to run on a Linux distribution based on Debian or Arch Linux.
+Showman is written in bash and configured to run on either Debian or Arch Linux distributions.
 
 It is recommended, but not required, that the default installation path directory (/opt/showman) is mounted to an external drive and separate from the disk where the OS is installed.
 
@@ -35,7 +35,7 @@ install - running this option will install docker and containers from LinuxServe
       * Sonarr<br>
       * Radarr<br>
       * SABNZBd<br>
-      * Emby -or Jellyfin<br>
+      * Emby -or- Jellyfin<br>
       * Swag (optional)<br>
       * Ombi (optional)<p>
 
