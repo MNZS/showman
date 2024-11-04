@@ -166,7 +166,7 @@ function showman_install() {
          -e "s/DISCORD_TOKEN/$DISCORD_TOKEN/g" \
          "$base_dir/compose/showman.yaml"
 
-  make_routine
+  #make_routine
   log_action "install"
   showman_up
 }
