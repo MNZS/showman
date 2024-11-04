@@ -161,7 +161,7 @@ function showman_install() {
   sed -i -e "s/SHOWMAN_USER/$user_id/g" \
          -e "s/SHOWMAN_GROUP/$group_id/g" \
          -e "s/SHOWMAN_URL/$SWAG_URL/g" \
-         -e "s/SHOWMAN_IP/$SHOW_IP/g" \
+         -e "s/SHOWMAN_IP/$SHOWMAN_IP/g" \
          -e "s/DISCORD_ID/$DISCORD_ID/g" \
          -e "s/DISCORD_TOKEN/$DISCORD_TOKEN/g" \
          "$base_dir/compose/showman.yaml"
