@@ -114,21 +114,12 @@ function showman_install() {
   ## figure out which base distro we're running
   . /etc/os-release
 
-  if [[ $(get_user_choice "Do you intend to access media from outside of the network where the media server will reside? (y/N)\n" "n") == "y" ]]; then
-    printf "\n\tshowman will be installed with options for public access\n\n"
-  else
-    printf "\n\tshowman will be installed for use on local network only\n\n"
-  fi
-
-  printf "\tIf this isn\'t what you wanted, hit ctrl-c now to cancel install\n\n"
-  sleep 7
-
   printf "\n\tStarting Showman install...\n\n"
 
   ## function variables
   local user='showman'
   local group='showman'
-  local all_directories=('bin' 'config' 'downloads' 'incomplete-downloads' 'tv' 'movies' 'compose' 'log')
+  local all_directories=('bin' 'config' 'downloads' 'factory' 'incomplete-downloads' 'tv' 'movies' 'compose' 'log')
 
   mkdir -p "$base_dir" || { echo "Failed to create base directory"; exit 1; }
   cp -a "$(dirname "$0")" "$base_dir/bin/"
@@ -169,12 +160,6 @@ function showman_install() {
          -e "s/SHOWMAN_GROUP/$group_id/g" \
          -e "s/SHOWMAN_URL/$tls_url/g" \
          "$base_dir/compose/showman.yaml"
-
-  if [[ $(get_user_choice "Do you prefer to use Jellyfin(j) or Emby(e) for watching content?\n" "j") == "j" ]]; then
-    sed -i -e "s/JF//g" -e "s/MB/##/g" "$base_dir/compose/showman.yaml"
-  else
-    sed -i -e "s/JF/##/g" -e "s/MB//g" "$base_dir/compose/showman.yaml"
-  fi
 
   make_routine
   log_action "install"

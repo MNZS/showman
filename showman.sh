@@ -193,7 +193,7 @@ function showman_install () {
       chown -R $user:$group "$base_dir/$directory"
     fi	
   done
-  cp ./showman.yaml $base_dir/compose/showman.yaml
+  cp ./showman-ng.yaml $base_dir/compose/showman.yaml
 
   user_id=$(id -u $user)
   group_id=$(id -g $user)
@@ -201,21 +201,6 @@ function showman_install () {
   sed -i "s/SHOWMAN_USER/$user_id/g" $base_dir/compose/showman.yaml
   sed -i "s/SHOWMAN_GROUP/$group_id/g" $base_dir/compose/showman.yaml
   sed -i "s/SHOWMAN_URL/$tls_url/g" $base_dir/compose/showman.yaml
-
-  if [ $user_choice = 'y' ]; then
-    sed -i "s/##//g" $base_dir/compose/showman.yaml
-    sed -i "s/ORG_PORT/8010/" $base_dir/compose/showman.yaml
-  else 
-    sed -i "s/ORG_PORT/80/" $base_dir/compose/showman.yaml
-  fi
-
-  if [ $user_viewer = 'j' ]; then
-    sed -i "s/JF//g" $base_dir/compose/showman.yaml
-    sed -i "s/MB/##/g" $base_dir/compose/showman.yaml
-  elif [ $user_viewer = 'e' ]; then
-    sed -i "s/JF/##/g" $base_dir/compose/showman.yaml
-    sed -i "s/MB//g" $base_dir/compose/showman.yaml
-  fi
 
   make_routine "$0"
 
