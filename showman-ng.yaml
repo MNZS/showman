@@ -106,7 +106,7 @@ services:
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/jellyfin:/config
-      - /opt/showman/contenttv:/tv
+      - /opt/showman/content/tv:/tv
       - /opt/showman/content/movies:/movies
       - /opt/showman/content/nfl:/nfl
       - /opt/showman/content/misc:/misc
