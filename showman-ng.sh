@@ -156,9 +156,14 @@ function showman_install() {
   local user_id=$(id -u "$user")
   local group_id=$(id -g "$user")
 
+  . ./showman_vars
+
   sed -i -e "s/SHOWMAN_USER/$user_id/g" \
          -e "s/SHOWMAN_GROUP/$group_id/g" \
-         -e "s/SHOWMAN_URL/$tls_url/g" \
+         -e "s/SHOWMAN_URL/$SWAG_URL/g" \
+         -e "s/SHOWMAN_IP/$SHOW_IP/g" \
+         -e "s/DISCORD_ID/$DISCORD_ID/g" \
+         -e "s/DISCORD_TOKEN/$DISCORD_TOKEN/g" \
          "$base_dir/compose/showman.yaml"
 
   make_routine
