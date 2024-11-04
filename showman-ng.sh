@@ -151,7 +151,7 @@ function showman_install() {
     mkdir -p "$base_dir/$directory" && chown -R "$user:$group" "$base_dir/$directory"
   done
 
-  cp ./showman.yaml "$base_dir/compose/showman.yaml"
+  cp ./showman-ng.yaml "$base_dir/compose/showman.yaml"
 
   local user_id=$(id -u "$user")
   local group_id=$(id -g "$user")
