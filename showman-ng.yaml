@@ -17,21 +17,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/localtime:/etc/localtime:ro
 
-  jellyfin:
-    image: ghcr.io/linuxserver/jellyfin
-    container_name: jellyfin
-    environment:
-      - PUID=SHOWMAN_USER
-      - PGID=SHOWMAN_GROUP
-      - TZ=America/Chicago
-    volumes:
-      - /opt/showman/config/jellyfin:/config
-      - /opt/showman/content/tv:/tv
-      - /opt/showman/content/movies:/movies
-    ports:
-      - 8096:8096
-    restart: unless-stopped
-
   organizr:
     image: organizr/organizr 
     container_name: organizr
