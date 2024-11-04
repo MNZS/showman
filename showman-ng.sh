@@ -119,7 +119,7 @@ function showman_install() {
   ## function variables
   local user='showman'
   local group='showman'
-  local all_directories=('bin' 'config' 'downloads' 'factory' 'incomplete-downloads' 'tv' 'movies' 'compose' 'log')
+  local all_directories=('bin' 'config' 'factory' 'factory/complete' 'content' 'content/tv' 'content/movies' 'compose' 'log')
 
   mkdir -p "$base_dir" || { echo "Failed to create base directory"; exit 1; }
   cp -a "$(dirname "$0")" "$base_dir/bin/"
