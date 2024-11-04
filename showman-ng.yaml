@@ -1,5 +1,22 @@
 services:
 
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    environment:
+      - TZ=America/Chicago
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_INCLUDE_STOPPED=true
+      - WATCHTOWER_REVIVE_STOPPED=false
+      - WATCHTOWER_NOTIFICATIONS=shoutrrr
+      - WATCHTOWER_NOTIFICATION_URL=discord://DISCORD_TOKEN@DISCORD_ID
+    build: .
+    extra_hosts:
+      - "showman:SHOWMAN_IP"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime:ro
+
   jellyfin:
     image: ghcr.io/linuxserver/jellyfin
     container_name: jellyfin
@@ -9,8 +26,8 @@ services:
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/jellyfin:/config
-      - /opt/showman/tv:/tv
-      - /opt/showman/movies:/movies
+      - /opt/showman/content/tv:/tv
+      - /opt/showman/content/movies:/movies
     ports:
       - 8096:8096
     restart: unless-stopped
@@ -25,23 +42,23 @@ services:
     volumes:
       - /opt/showman/config/organizr:/config
     ports:
-      - ORG_PORT:80
+      - 8010:80
     restart: unless-stopped
 
-  sabnzbd:
-    image: ghcr.io/linuxserver/sabnzbd
-    container_name: sabnzbd
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
     environment:
       - PUID=SHOWMAN_USER
       - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
     volumes:
-      - /opt/showman/config/sabnzbd:/config
-      - /opt/showman/downloads:/downloads
-      - /opt/showman/incomplete-downloads:/incomplete-downloads 
+      - /opt/showman/config/prowlarr:/config
+    build: .
+    extra_hosts:
+      - "showman:SHOWMAN_IP"
     ports:
-      - 8080:8080
-      - 9090:9090
+      - 9696:9696
     restart: unless-stopped
 
   radarr:
@@ -53,8 +70,8 @@ services:
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/radarr:/config
-      - /opt/showman/movies:/movies
-      - /opt/showman/downloads:/downloads
+      - /opt/showman/content/movies:/movies
+      - /opt/showman/factory/complete:/complete
       - /etc/localtime:/etc/localtime:ro
     ports:
       - 7878:7878
@@ -70,25 +87,64 @@ services:
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/sonarr:/config
-      - /opt/showman/tv:/tv
-      - /opt/showman/downloads:/downloads
-      - /etc/localtime:/etc/localtime:ro
+      - /opt/showman/content/tv:/tv
+      - /opt/showman/factory/complete:/complete
     ports:
       - 8989:8989
       - 9898:9898
     restart: unless-stopped
 
-  prowlarr:
-    image: lscr.io/linuxserver/prowlarr:latest
-    container_name: prowlarr
+  nzbget:
+    image: lscr.io/linuxserver/nzbget:latest
+    container_name: nzbget
     environment:
       - PUID=SHOWMAN_USER
       - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
     volumes:
-      - /opt/showman/config/prowlarr:/config
+      - /opt/showman/config/nzbget:/config
+      - /opt/showman/factory/complete:/complete
+      - /opt/showman/factory:/factory
+    build: .
+    extra_hosts:
+      - "showman:SHOWMAN_IP"
     ports:
-      - 9696:9696
+      - 6789:6789
+    restart: unless-stopped
+
+  jellyfin:
+    image: ghcr.io/linuxserver/jellyfin
+    container_name: jellyfin
+    environment:
+      - PUID=SHOWMAN_USER
+      - PGID=SHOWMAN_GROUP
+      - TZ=America/Chicago
+    volumes:
+      - /opt/showman/config/jellyfin:/config
+      - /opt/showman/contenttv:/tv
+      - /opt/showman/content/movies:/movies
+      - /opt/showman/content/nfl:/nfl
+      - /opt/showman/content/misc:/misc
+    build: .
+    extra_hosts:
+      - "showman:SHOWMAN_IP"
+    ports:
+      - 8096:8096
+    restart: unless-stopped
+
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=America/Chicago
+    build: .
+    extra_hosts:
+      - "showman:SHOWMAN_IP"
+    ports:
+      - 5055:5055
+    volumes:
+      - /opt/showman/config/jellyseerr:/app/config
     restart: unless-stopped
 
   swag:
@@ -101,7 +157,7 @@ services:
       - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
       - URL=SHOWMAN_URL
-      - SUBDOMAINS=www,ombi,jellyfin
+      - SUBDOMAINS=www,jellyfin,jellyseerr
       - VALIDATION=http
     volumes:
       - /opt/showman/config/swag:/config
