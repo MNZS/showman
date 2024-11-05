@@ -10,10 +10,6 @@ dc_exec="/usr/bin/docker compose -f $base_dir/compose/showman.yaml"
 
 ###########################################
 
-function showman_start() {
-  $dc_exec start
-}
-
 function showman_install() {
   ## figure out which base distro we're running
   . /etc/os-release
@@ -68,34 +64,13 @@ function showman_install() {
   
   chown -R $user_id:$group_id $base_dir
 
-  showman_up
-}
-
-function compose_pull() {
-  $dc_exec pull
-}
-
-function compose_up() {
   $dc_exec up -d
-}
-
-function showman_update() {
-  compose_pull 
-  compose_up > "$tmp_file" 2>&1
 }
 
 case "$1" in
   install)
     printf "\n\e[32mStarting Showman install...\e[0m\n\n"
     showman_install
-    ;;
-  up)
-    printf "\n\e[92mBringing up Showman containers...\e[0m\n\n"
-    showman_up
-    ;;
-  start)
-    printf "\n\e[92mStarting Showman containers...\e[0m\n\n"
-    showman_start
     ;;
   *)
     printf "\n\e[34mUsage: showman.sh (install|update|stop|start)\e[0m\n\n"
