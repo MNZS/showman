@@ -55,9 +55,8 @@ services:
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/radarr:/config
-      - /opt/showman/content/movies:/movies
-      - /opt/showman/factory/complete:/complete
-      - /etc/localtime:/etc/localtime:ro
+      - /opt/showman/content:/showman/content
+      - /opt/showman/factory:/showman/factory
     ports:
       - 7878:7878
       - 8787:8787
@@ -72,8 +71,8 @@ services:
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/sonarr:/config
-      - /opt/showman/content/tv:/tv
-      - /opt/showman/factory/complete:/complete
+      - /opt/showman/content:/showman/content
+      - /opt/showman/factory:/showman/factory
     ports:
       - 8989:8989
       - 9898:9898
@@ -88,8 +87,7 @@ services:
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/nzbget:/config
-      - /opt/showman/factory/complete:/complete
-      - /opt/showman/factory:/factory
+      - /opt/showman/factory/:/showman/factory
     build: .
     extra_hosts:
       - "showman:SHOWMAN_IP"
@@ -106,10 +104,7 @@ services:
       - TZ=America/Chicago
     volumes:
       - /opt/showman/config/jellyfin:/config
-      - /opt/showman/content/tv:/tv
-      - /opt/showman/content/movies:/movies
-      - /opt/showman/content/nfl:/nfl
-      - /opt/showman/content/misc:/misc
+      - /opt/showman/content:/showman/content
     build: .
     extra_hosts:
       - "showman:SHOWMAN_IP"
