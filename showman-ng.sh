@@ -3,7 +3,6 @@
 ## user-defined variables #################
 
 base_dir='/opt/showman' ## full path to the mount point for persistent data
-tls_url='' ## TLD used by SWAG to create TLS certificate
 
 ## global variables #######################
 
@@ -119,7 +118,8 @@ function showman_install() {
   ## function variables
   local user='showman'
   local group='showman'
-  local all_directories=('bin' 'config' 'factory' 'factory/complete' 'content' 'content/tv' 'content/movies' 'compose' 'log')
+  local all_directories=('bin' 'config' 'compose' )
+  #local all_directories=('bin' 'config' 'content' 'factory' 'compose' )
 
   mkdir -p "$base_dir" || { echo "Failed to create base directory"; exit 1; }
   cp -a "$(dirname "$0")" "$base_dir/bin/"
