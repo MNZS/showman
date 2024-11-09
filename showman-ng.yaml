@@ -34,7 +34,7 @@ services:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     environment:
-      - PUID=SHOWMAN_USER
+      - PUID=PROWLARR_USER
       - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
       - UMASK=002

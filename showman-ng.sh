@@ -66,6 +66,7 @@ function showman_install() {
          -e "s/SONARR_USER/$sonarr_id/g" \
          -e "s/RADARR_USER/$radarr_id/g" \
          -e "s/NZBGET_USER/$nzbget_id/g" \
+         -e "s/PROWLARR_USER/$nzbget_id/g" \
          -e "s/SHOWMAN_GROUP/$group_id/g" \
          -e "s/SHOWMAN_URL/$SWAG_URL/g" \
          -e "s/SHOWMAN_IP/$SHOWMAN_IP/g" \
