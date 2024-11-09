@@ -16,7 +16,6 @@ function showman_install() {
 
   ## function variables
   local user='showman'
-  local group='showman'
   local all_directories=('bin' 'config' 'compose' 'content' 'factory' )
 
   mkdir -p "$base_dir" || { echo "Failed to create base directory"; exit 1; }
@@ -39,8 +38,14 @@ function showman_install() {
   esac
 
   ## create user
+  groupadd showtime 
   local NOLOGIN=$(which nologin)
-  useradd -s "$NOLOGIN" -d /dev/null -M -c 'Showman Role Account' "$user" || { echo "Failed to create user"; exit 1; }
+  useradd -s "$NOLOGIN" -d /dev/null -M -G showtime -c 'Showman Role Account' "$user" || { echo "Failed to create user"; exit 1; }
+
+  ## NG Users
+  useradd -s "$NOLOGIN" -d /dev/null -M -G showtime -c 'Sonarr Role Account' sonarr || { echo "Failed to create user"; exit 1; }
+  useradd -s "$NOLOGIN" -d /dev/null -M -G showtime -c 'Radarr Role Account' radarr || { echo "Failed to create user"; exit 1; }
+  useradd -s "$NOLOGIN" -d /dev/null -M -G showtime -c 'NzbGet Role Account' nzbget || { echo "Failed to create user"; exit 1; }
 
   # Create necessary directories
   for directory in "${all_directories[@]}"; do
@@ -50,11 +55,17 @@ function showman_install() {
   cp ./showman-ng.yaml "$base_dir/compose/showman.yaml"
 
   local user_id=$(id -u "$user")
-  local group_id=$(id -g "$user")
+  local group_id=$(getent group showtime | cut -d: -f3)
 
+  local sonarr_id=$(id -u sonarr)
+  local radarr_id=$(id -u radarr)
+  local nzbget_id=$(id -u nzbget)
   . ./showman_vars
 
   sed -i -e "s/SHOWMAN_USER/$user_id/g" \
+         -e "s/SONARR_USER/$sonarr_id/g" \
+         -e "s/RADARR_USER/$radarr_id/g" \
+         -e "s/NZBGET_USER/$nzbget_id/g" \
          -e "s/SHOWMAN_GROUP/$group_id/g" \
          -e "s/SHOWMAN_URL/$SWAG_URL/g" \
          -e "s/SHOWMAN_IP/$SHOWMAN_IP/g" \
@@ -63,6 +74,7 @@ function showman_install() {
          "$base_dir/compose/showman.yaml"
   
   chown -R $user_id:$group_id $base_dir
+  chmod -R g+w $base_dir
 
   $dc_exec up -d
 }
