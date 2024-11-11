@@ -47,6 +47,8 @@ function showman_install() {
   useradd -s "$NOLOGIN" -d /dev/null -M -G showtime -c 'Radarr Role Account' radarr || { echo "Failed to create user"; exit 1; }
   useradd -s "$NOLOGIN" -d /dev/null -M -G showtime -c 'NzbGet Role Account' nzbget || { echo "Failed to create user"; exit 1; }
   useradd -s "$NOLOGIN" -d /dev/null -M -G showtime -c 'Prowlarr Role Account' prowlarr || { echo "Failed to create user"; exit 1; }
+  useradd -s "$NOLOGIN" -d /dev/null -M -G showtime -c 'Jellyfin Role Account' jellyfin || { echo "Failed to create user"; exit 1; }
+  useradd -s "$NOLOGIN" -d /dev/null -M -G showtime -c 'Jellyseerr Role Account' jellyseerr || { echo "Failed to create user"; exit 1; }
 
   # Create necessary directories
   for directory in "${all_directories[@]}"; do
@@ -62,6 +64,8 @@ function showman_install() {
   local radarr_id=$(id -u radarr)
   local nzbget_id=$(id -u nzbget)
   local prowlarr_id=$(id -u prowlarr)
+  local jellyseerr_id=$(id -u jellyseerr)
+  local jellyfin_id=$(id -u jellyfin)
   . ./showman_vars
 
   sed -i -e "s/SHOWMAN_USER/$user_id/g" \
@@ -69,6 +73,8 @@ function showman_install() {
          -e "s/RADARR_USER/$radarr_id/g" \
          -e "s/NZBGET_USER/$nzbget_id/g" \
          -e "s/PROWLARR_USER/$prowlarr_id/g" \
+         -e "s/JELLYFIN_USER/$jellyfin_id/g" \
+         -e "s/JELLYSEERR_USER/$jellyseerr_id/g" \
          -e "s/SHOWMAN_GROUP/$group_id/g" \
          -e "s/SHOWMAN_URL/$SWAG_URL/g" \
          -e "s/SHOWMAN_IP/$SHOWMAN_IP/g" \
