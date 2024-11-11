@@ -24,6 +24,9 @@ services:
       - PUID=SHOWMAN_USER
       - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
+    build: .
+    extra_hosts:
+      - "showman:SHOWMAN_IP"
     volumes:
       - /opt/showman/config/organizr:/config
     ports:
@@ -38,11 +41,11 @@ services:
       - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
       - UMASK=002
-    volumes:
-      - /opt/showman/config/prowlarr:/config
     build: .
     extra_hosts:
       - "showman:SHOWMAN_IP"
+    volumes:
+      - /opt/showman/config/prowlarr:/config
     ports:
       - 9696:9696
     restart: unless-stopped
@@ -55,6 +58,9 @@ services:
       - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
       - UMASK=002
+    build: .
+    extra_hosts:
+      - "showman:SHOWMAN_IP"
     volumes:
       - /opt/showman/config/radarr:/config
       - /opt/showman:/showman
@@ -71,6 +77,9 @@ services:
       - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
       - UMASK=002
+    build: .
+    extra_hosts:
+      - "showman:SHOWMAN_IP"
     volumes:
       - /opt/showman/config/sonarr:/config
       - /opt/showman:/showman
@@ -87,12 +96,12 @@ services:
       - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
       - UMASK=002
-    volumes:
-      - /opt/showman/config/nzbget:/config
-      - /opt/showman:/showman
     build: .
     extra_hosts:
       - "showman:SHOWMAN_IP"
+    volumes:
+      - /opt/showman/config/nzbget:/config
+      - /opt/showman:/showman
     ports:
       - 6789:6789
     restart: unless-stopped
@@ -101,16 +110,16 @@ services:
     image: ghcr.io/linuxserver/jellyfin
     container_name: jellyfin
     environment:
-      - PUID=SHOWMAN_USER
+      - PUID=JELLYFIN_USER
       - PGID=SHOWMAN_GROUP
       - TZ=America/Chicago
       - UMASK=002
-    volumes:
-      - /opt/showman/config/jellyfin:/config
-      - /opt/showman:/showman
     build: .
     extra_hosts:
       - "showman:SHOWMAN_IP"
+    volumes:
+      - /opt/showman/config/jellyfin:/config
+      - /opt/showman:/showman
     ports:
       - 8096:8096
     restart: unless-stopped
