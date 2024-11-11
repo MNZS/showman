@@ -1,5 +1,15 @@
 ## variables for yaml file
+
+## root installation directory
+BASE_DIR='/opt/showman'
+
+## Watchtower is configured to alert via Discord
 DISCORD_ID=''
 DISCORD_TOKEN=''
+
+## This should be a registered domain that resolves to a public ip address
+## domain.tld
 SWAG_URL=''
+
+## This should be the internal network IP address for your server
 SHOWMAN_IP=''
