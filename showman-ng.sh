@@ -1,16 +1,11 @@
 #!/bin/bash
 
-## user-defined variables #################
-
-base_dir='/opt/showman' ## full path to the mount point for persistent data
-
-## global variables #######################
-
-dc_exec="/usr/bin/docker compose -f $base_dir/compose/showman.yaml"
-
 ###########################################
 
 function showman_install() {
+
+  dc_exec="/usr/bin/docker compose -f $BASE_DIR/compose/showman.yaml"
+
   ## figure out which base distro we're running
   . /etc/os-release
 
@@ -18,7 +13,7 @@ function showman_install() {
   local user='showman'
   local all_directories=('bin' 'config' 'compose' 'content' 'factory' )
 
-  mkdir -p "$base_dir" || { echo "Failed to create base directory"; exit 1; }
+  mkdir -p "$BASE_DIR" || { echo "Failed to create base directory"; exit 1; }
 
   ## Install Docker based on the OS
   case "$ID" in
@@ -52,10 +47,10 @@ function showman_install() {
 
   # Create necessary directories
   for directory in "${all_directories[@]}"; do
-    mkdir -p "$base_dir/$directory" 
+    mkdir -p "$BASE_DIR/$directory" 
   done
 
-  cp ./showman-ng.yaml "$base_dir/compose/showman.yaml"
+  cp ./showman-ng.yaml "$BASE_DIR/compose/showman.yaml"
 
   local user_id=$(id -u "$user")
   local group_id=$(getent group showtime | cut -d: -f3)
@@ -80,10 +75,10 @@ function showman_install() {
          -e "s/SHOWMAN_IP/$SHOWMAN_IP/g" \
          -e "s/DISCORD_ID/$DISCORD_ID/g" \
          -e "s/DISCORD_TOKEN/$DISCORD_TOKEN/g" \
-         "$base_dir/compose/showman.yaml"
+         "$BASE_DIR/compose/showman.yaml"
   
-  chown -R $user_id:$group_id $base_dir
-  chmod -R a=,a+rX,u+w,g+w $base_dir
+  chown -R $user_id:$group_id $BASE_DIR
+  chmod -R a=,a+rX,u+w,g+w $BASE_DIR
 
   $dc_exec up -d
 }
